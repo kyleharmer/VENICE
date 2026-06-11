@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Two Souls, One City: Venice at Twenty</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: transparent; }
+
+body { font-size: 16px; line-height: 1.6; color: #333; }
+
+.header {
+  background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+  color: white;
+  padding: 2rem 1rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 3px solid #D4AF37;
+}
+
+.header-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; line-height: 1.4; }
+.header-subtitle { font-size: 16px; opacity: 0.95; font-style: italic; }
+.header-dates { font-size: 14px; opacity: 0.85; margin-top: 10px; }
+
+.itinerary-container { display: flex; flex-direction: column; gap: 14px; padding: 1rem 0.75rem; }
+
+.day-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+details { margin: 0; }
+
+.day-summary {
+  padding: 1.2rem;
+  background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 20px;
+  font-weight: 600;
+  user-select: none;
+  list-style: none;
+  min-height: 64px;
+  gap: 12px;
+}
+
+.day-summary::-webkit-details-marker { display: none; }
+
+.day-summary::before {
+  content: '▼';
+  display: inline-block;
+  transition: transform 0.2s;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+details[open] .day-summary::before { transform: rotate(180deg); }
+
+.day-info { display: flex; align-items: baseline; gap: 10px; flex: 1; min-width: 0; }
+.day-date { font-size: 24px; font-weight: 700; white-space: nowrap; }
+.day-dow { font-size: 16px; opacity: 0.9; }
+
+.day-content { padding: 1.2rem; }
+
+.coffee-spot {
+  background: #FFF8E7;
+  padding: 14px;
+  border-left: 5px solid #D4AF37;
+  border-radius: 6px;
+  font-size: 16px;
+  margin-bottom: 1.8rem;
+  color: #333;
+  line-height: 1.7;
+}
+
+.section { margin-bottom: 2.2rem; }
+
+.section-title { 
+  font-size: 16px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: #5D4037;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #D4AF37;
+}
+
+.activity-name { 
+  font-size: 20px;
+  font-weight: 700;
+  color: #2C1810;
+  margin-bottom: 8px;
+}
+
+.activity-detail {
+  font-size: 15px;
+  color: #666;
+  margin-bottom: 16px;
+  font-style: italic;
+}
+
+.dossier-box {
+  border-left: 5px solid #8B4513;
+  padding: 14px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.dossier-see { background: #C8E6C9; border-left-color: #2E7D32; }
+.dossier-why { background: #BBDEFB; border-left-color: #1565C0; }
+.dossier-phys { background: #FFE0B2; border-left-color: #E65100; }
+
+.dossier-label {
+  font-weight: 800;
+  color: #2C1810;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.vaporetto-box {
+  background: #E1BEE7;
+  border-left: 5px solid #7B1FA2;
+  padding: 14px;
+  border-radius: 6px;
+  font-size: 15px;
+  margin: 16px 0;
+  line-height: 1.8;
+  color: #333;
+}
+
+.vaporetto-box strong { color: #4A148C; display: block; margin-bottom: 8px; font-size: 16px; }
+
+.restaurants-grid { display: grid; gap: 12px; }
+
+.restaurant {
+  padding: 14px;
+  border-left: 5px solid #8B4513;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.restaurant:nth-child(1) { background: #FFCDD2; border-left-color: #C62828; }
+.restaurant:nth-child(2) { background: #F8BBD0; border-left-color: #AD1457; }
+.restaurant:nth-child(3) { background: #E1BEE7; border-left-color: #6A1B9A; }
+.restaurant:nth-child(4) { background: #C5CAE9; border-left-color: #283593; }
+.restaurant:nth-child(5) { background: #BBDEFB; border-left-color: #1565C0; }
+
+.restaurant-name {
+  font-weight: 700;
+  color: #2C1810;
+  font-size: 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.book-badge {
+  display: inline-block;
+  background: #D32F2F;
+  color: white;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.restaurant-note {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.7;
+}
+
+.adventure-option {
+  background: #F0F4C3;
+  border-left: 5px solid #9CCC65;
+  padding: 14px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.adventure-label {
+  font-weight: 800;
+  color: #2C1810;
+  font-size: 15px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.footer-notes {
+  background: #F5E6D3;
+  padding: 1.2rem;
+  border-radius: 12px;
+  margin-top: 2rem;
+  font-size: 14px;
+  color: #666;
+  border-left: 5px solid #8B4513;
+  line-height: 1.8;
+}
+
+.footer-notes strong { color: #2C1810; display: block; margin-top: 10px; font-size: 15px; }
+.footer-notes strong:first-child { margin-top: 0; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-title">Two Souls, One City</div>
+  <div class="header-subtitle">Venice at Twenty Years</div>
+  <div class="header-dates">June 18 – 25, 2026</div>
+</div>
+
+<div class="itinerary-container" id="itinerary">
+
+  <!-- JUNE 18 -->
+  <div class="day-card">
+    <details>
+      <summary class="day-summary">
+        <div class="day-info">
+          <span class="day-date">June 18</span>
+          <span class="day-dow">Thu</span>
+        </div>
+      </summary>
+      <div class="day-content">
+        <div class="coffee-spot"><strong>ARRIVAL DAY:</strong> Delta flight arrives Marco Polo 6:00 pm. Water taxi from Pier 3/4 at 6:30 pm to Arsenale. Settle into "Romantic Ca' D'Oro" by 8-9 pm. Light dinner nearby if hungry from travel.</div>
+        
+        <div class="section">
+          <div class="section-title">Journey to Venice</div>
+          <div class="activity-name">From Detroit to Venice</div>
+          <div class="activity-detail">DL8718 departs 8:55 pm (June 17) → DL8356 arrives 6:00 pm (June 18)</div>
+          
+          <div class="dossier-box dossier-phys">
+            <span class="dossier-label">Logistics:</span>
+            Water taxi booked: Consorzio Motoscafi Venezia, Booking Code 67SJR. Dock Pier 3/4, departs 6:30 pm. Airbnb check-in: Alessandro & Eleonora will have keys ready. Address: Calle Dei Albanesi, 4021. Phone: +39 366 9770175. Confirmation: HMM42MZFHW.
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Dinner (Casual, Close to Airbnb)</div>
+          <div class="restaurants-grid">
+            <div class="restaurant">
+              <div class="restaurant-name">Da Fabiana Paolo</div>
+              <div class="restaurant-note">Short walk from Airbnb. Fantastic service, delicious, homey. Walk-in OK. EUR 35-50.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Hopera Restaurant & Pizza</div>
+              <div class="restaurant-note">Via Garibaldi (the only street!). Family-run, authentic Venetian. Walk-in OK. EUR 30-45.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Nevodi</div>
+              <div class="restaurant-note">Castello, local spot, creative pizzas. Walk-in OK. EUR 35-50.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Pick up cicchetti & wine</div>
+              <div class="restaurant-note">Or grab fresh pizza/cicchetti from a local spot and eat at the Airbnb. You'll be pleasantly tired from travel—cosy night in.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- JUNE 19 -->
+  <div class="day-card">
+    <details>
+      <summary class="day-summary">
+        <div class="day-info">
+          <span class="day-date">June 19</span>
+          <span class="day-dow">Fri</span>
+        </div>
+      </summary>
+      <div class="day-content">
+        <div class="coffee-spot"><strong>BREAKFAST:</strong> Fuel up for gilded rooms—find your espresso ritual at a local bar. Cornetto (croissant) and strong coffee. EUR 3-5.</div>
+        
+        <div class="section">
+          <div class="section-title">Main Activity</div>
+          <div class="activity-name">Doge's Palace & St. Mark's Basilica</div>
+          <div class="activity-detail">~2 hours | Venice's political & religious heart</div>
+          
+          <div class="dossier-box dossier-see">
+            <span class="dossier-label">What you'll see:</span>
+            Doge's Palace: Gilded state rooms, enormous Tintoretto paintings, the "staircase of the giants," secret corridors, and the Bridge of Sighs. St. Mark's Basilica: Byzantine mosaics, the Pala d'Oro (jeweled gold altarpiece), holy reliquaries, soaring domes.
+          </div>
+          
+          <div class="dossier-box dossier-why">
+            <span class="dossier-label">Why it matters:</span>
+            This was Venice's political and spiritual center for over 1,000 years. The Doge's Palace is where decisions that shaped Europe were made. St. Mark's is one of the world's most famous churches.
+          </div>
+
+          <div class="dossier-box dossier-phys">
+            <span class="dossier-label">Physical & practical:</span>
+            Doge's Palace: 3 floors with staircases, elevators available. Basilica: ground level, often crowded. Buy tickets online. 1 hour Doge's + 0.5-1 hour Basilica. Very busy 11am-4pm; go early or late.
+          </div>
+
+          <div class="vaporetto-box">
+            <strong>VAPORETTO: Line 1 westbound from Arsenale</strong>
+            Get off at San Marco-Vallaresso or San Marco-Giardinetti (5-6 stops, about 15 min). You'll see the clock tower (Campanile) and the Basilica dome. Exit toward the square.
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Lunch options</div>
+          <div class="restaurants-grid">
+            <div class="restaurant">
+              <div class="restaurant-name">Dal Moro's Fresh Pasta To Go</div>
+              <div class="restaurant-note">Fresh homemade pasta made to order. 7th-generation Venetian chef. EUR 8-12.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Bistrot de Venise</div>
+              <div class="restaurant-note">Refined Venetian cuisine. 4 min from St. Mark's. EUR 18-25.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Doge Morosini</div>
+              <div class="restaurant-note">Campo Santo Stefano. Black noodles with busera. Medium-upscale. EUR 23+.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Rossopomodoro</div>
+              <div class="restaurant-note">2 min from St. Mark's. Neapolitan pizza, casual. EUR 12-16.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Dinner (San Polo/Rialto - further out)</div>
+          <div class="restaurants-grid">
+            <div class="restaurant">
+              <div class="restaurant-name">Osteria Alla Staffa <span class="book-badge">BOOK</span></div>
+              <div class="restaurant-note">Near Rialto. Local favorite, intimate, traditional. EUR 35-50.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Al Vecio Calice</div>
+              <div class="restaurant-note">Rialto area, cicchetti & wine bar. Cosy, walk-in OK. EUR 25-40.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Trattoria Al Gazzettino</div>
+              <div class="restaurant-note">San Polo, traditional Venetian, seafood. EUR 40-55.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Birraria La Corte</div>
+              <div class="restaurant-note">Campo San Polo. Pizza + seafood on the square. EUR 30-45.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- JUNE 20 -->
+  <div class="day-card">
+    <details>
+      <summary class="day-summary">
+        <div class="day-info">
+          <span class="day-date">June 20</span>
+          <span class="day-dow">Sat</span>
+        </div>
+      </summary>
+      <div class="day-content">
+        <div class="coffee-spot"><strong>BREAKFAST:</strong> Slow morning in Cannaregio vibes—find a locals' bar near the Airbnb. Order "un caffè" like you belong there.</div>
+        
+        <div class="section">
+          <div class="section-title">Main Activity</div>
+          <div class="activity-name">Jewish Ghetto & Cannaregio Wandering</div>
+          <div class="activity-detail">~2.5 hours | First European ghetto + local neighborhoods</div>
+          
+          <div class="dossier-box dossier-see">
+            <span class="dossier-label">What you'll see:</span>
+            Campo del Ghetto Nuovo where Venice's Jewish community lived starting in 1516. Five historic synagogues built vertically. Museum exhibits, kosher restaurants. Quiet canals, local bars, real Venetian life.
+          </div>
+
+          <div class="dossier-box dossier-why">
+            <span class="dossier-label">Why it matters:</span>
+            First Jewish ghetto in Europe. Powerful history. The community is still active here. Walking these narrow streets feels like stepping back in time. Cannaregio is where regular Venetians live.
+          </div>
+
+          <div class="dossier-box dossier-phys">
+            <span class="dossier-label">Physical & practical:</span>
+            Small ghetto square. Alleys are narrow (wheelchair-passable but snug). Synagogue interiors have stairs (skip if needed). Magic is wandering. 1 hour ghetto + 1-1.5 hours wandering. Very quiet.
+          </div>
+
+          <div class="vaporetto-box">
+            <strong>VAPORETTO: Line 1 westbound from Arsenale</strong>
+            Get off at San Marcuola (12-13 stops, about 25 min). Walk north into Cannaregio. Follow signs to "Ghetto." About 10-15 min walk, or walk directly from apartment through Cannaregio.
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Lunch options</div>
+          <div class="restaurants-grid">
+            <div class="restaurant">
+              <div class="restaurant-name">Gam Gam</div>
+              <div class="restaurant-note">Canal-front kosher. Mediterranean + Venetian fusion. Outdoor seating. EUR 18-28.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Ghimel Garden & Palace</div>
+              <div class="restaurant-note">Heart of Ghetto. Kosher dairy, vegetarian. Garden seating. EUR 15-25.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Hostaria Al Vecio Bragosso</div>
+              <div class="restaurant-note">Cannaregio. Kosher + Italian. Rustic charm. EUR 20-32.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Trattoria Povoledo</div>
+              <div class="restaurant-note">Family-run since 1950. Terrace on Grand Canal. Modern Venetian. EUR 25-38.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Dinner (Dorsoduro - further out)</div>
+          <div class="restaurants-grid">
+            <div class="restaurant">
+              <div class="restaurant-name">Al Covo <span class="book-badge">BOOK</span></div>
+              <div class="restaurant-note">Candlelit, intimate, locally sourced. Away from crowds. EUR 50-65.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Osteria Boccadoro <span class="book-badge">BOOK</span></div>
+              <div class="restaurant-note">Hidden gem, warm lighting, fresh seafood. EUR 45-60.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Ai Cugnai</div>
+              <div class="restaurant-note">Near Accademia/Guggenheim. Excellent seafood. Call ahead. EUR 40-55.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- JUNE 21 -->
+  <div class="day-card">
+    <details>
+      <summary class="day-summary">
+        <div class="day-info">
+          <span class="day-date">June 21</span>
+          <span class="day-dow">Sun</span>
+        </div>
+      </summary>
+      <div class="day-content">
+        <div class="coffee-spot"><strong>BREAKFAST:</strong> Art hunger—fuel up with coffee and carbs before Guggenheim. Order ahead from your favorite panetteria.</div>
+        
+        <div class="section">
+          <div class="section-title">Main Activity</div>
+          <div class="activity-name">Peggy Guggenheim Museum</div>
+          <div class="activity-detail">~2 hours | Modern art collection in a palazzo garden</div>
+          
+          <div class="dossier-box dossier-see">
+            <span class="dossier-label">What you'll see:</span>
+            Peggy's personal collection: Jackson Pollock, Kandinsky, Dali, Ernst, Magritte. Her unfinished palazzo, sculpture garden. Intimate rooms where she lived with her art.
+          </div>
+
+          <div class="dossier-box dossier-why">
+            <span class="dossier-label">Why it matters:</span>
+            Peggy was one of the 20th century's greatest art patrons. She saved modern art from the Nazis, discovered Jackson Pollock, and moved to Venice. Deeply personal—her taste and legacy.
+          </div>
+
+          <div class="dossier-box dossier-phys">
+            <span class="dossier-label">Physical & practical:</span>
+            Ground floor galleries + outdoor garden. No major staircases, very accessible. Smallest and least crowded museum. Cafe in garden is pricey but nice place to sit. 1.5-2 hours good.
+          </div>
+
+          <div class="vaporetto-box">
+            <strong>VAPORETTO: Line 1 westbound from Arsenale</strong>
+            Get off at Accademia (6-8 stops, about 20 min). Walk south from dock (about 10 min). On left bank of Grand Canal in Dorsoduro. Look for Palazzo Venier dei Leoni sign.
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Lunch options</div>
+          <div class="restaurants-grid">
+            <div class="restaurant">
+              <div class="restaurant-name">Ai Cugnai</div>
+              <div class="restaurant-note">Steps from Guggenheim. Fresh seafood, well-presented. EUR 30-40.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Osteria Enoteca Ai Artisti</div>
+              <div class="restaurant-note">Informal, daily menu based on market. Father-son run. EUR 25-35.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Trattoria Dona Onesta</div>
+              <div class="restaurant-note">Outdoor terrace. Romantic. Good pasta + seafood. EUR 28-38.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Dinner (Castello - close to Airbnb)</div>
+          <div class="restaurants-grid">
+            <div class="restaurant">
+              <div class="restaurant-name">Hostaria Castello <span class="book-badge">BOOK</span></div>
+              <div class="restaurant-note">Between San Marco & Arsenal. Tiny, vintage. Creative dishes. EUR 40-55.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Trattoria da Jonny <span class="book-badge">BOOK</span></div>
+              <div class="restaurant-note">Near Arsenal. Black ravioli with cod. Indoor + outdoor. EUR 45-60.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Nevodi</div>
+              <div class="restaurant-note">Castello, away from crowds (local). Creative pizzas + Venetian. EUR 35-50.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- JUNE 22 -->
+  <div class="day-card">
+    <details>
+      <summary class="day-summary">
+        <div class="day-info">
+          <span class="day-date">June 22</span>
+          <span class="day-dow">Mon</span>
+        </div>
+      </summary>
+      <div class="day-content">
+        <div class="coffee-spot"><strong>BREAKFAST:</strong> Tintoretto energy—strong espresso and carbs to fuel the neck-craning. Find your local spot and order like regulars.</div>
+        
+        <div class="section">
+          <div class="section-title">Main Activity</div>
+          <div class="activity-name">Scuola Grande di San Rocco</div>
+          <div class="activity-detail">~1.5-2 hours | 56 Tintoretto paintings</div>
+          
+          <div class="dossier-box dossier-see">
+            <span class="dossier-label">What you'll see:</span>
+            56 monumental Tintoretto paintings covering walls and ceilings across two floors. Ornate wooden ceilings, marble staircases, gilded details. Tintoretto spent 23 years here.
+          </div>
+
+          <div class="dossier-box dossier-why">
+            <span class="dossier-label">Why it matters:</span>
+            Tintoretto's masterpiece. If you love Renaissance art, pilgrimage site. Scale and ambition overwhelming. Paintings cover every surface—you spend time looking up.
+          </div>
+
+          <div class="dossier-box dossier-phys">
+            <span class="dossier-label">Physical & practical:</span>
+            Two levels with marble staircases. No elevator, but steps are wide and well-maintained. Can feel crowded. Go early or late. Don't try to see everything—pick a few paintings to focus on.
+          </div>
+
+          <div class="vaporetto-box">
+            <strong>VAPORETTO: Line 1 westbound from Arsenale</strong>
+            Get off at San Toma (7 stops, about 20 min). Walk into San Polo (northwest). Scuola nearby (about 5 min walk). Next to Frari church.
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Lunch options</div>
+          <div class="restaurants-grid">
+            <div class="restaurant">
+              <div class="restaurant-name">Cafe San Rocco</div>
+              <div class="restaurant-note">Right by Scuola. Pizza, salads. Friendly. Very reasonable. EUR 12-18.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Da Fiore <span class="book-badge">BOOK (dinner)</span></div>
+              <div class="restaurant-note">Michelin-starred, relaxed. Seppie in nero. Lunch walk-in OK. EUR 45-65.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Fritto Misto at fish market</div>
+              <div class="restaurant-note">San Polo. Mixed fried fish, quick, authentic. EUR 10-15.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Dinner (Castello - close to Airbnb)</div>
+          <div class="restaurants-grid">
+            <div class="restaurant">
+              <div class="restaurant-name">Trattoria ai Tosi <span class="book-badge">BOOK</span></div>
+              <div class="restaurant-note">Remote, tranquil Castello. Homey, traditional. Good value. EUR 25-40.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Hopera Restaurant & Pizza</div>
+              <div class="restaurant-note">Via Garibaldi (the only street!). Family-run, authentic. Walk-in OK. EUR 30-45.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">CoVino <span class="book-badge">BOOK</span></div>
+              <div class="restaurant-note">7 tables near Arsenale. Open kitchen, local seasonal. EUR 40-55.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- JUNE 23 -->
+  <div class="day-card">
+    <details>
+      <summary class="day-summary">
+        <div class="day-info">
+          <span class="day-date">June 23</span>
+          <span class="day-dow">Tue</span>
+        </div>
+      </summary>
+      <div class="day-content">
+        <div class="coffee-spot"><strong>BREAKFAST:</strong> Renaissance stomach—fuel before the art marathon. Pastry and caffeine at your favorite local bar.</div>
+        
+        <div class="section">
+          <div class="section-title">Main Activity</div>
+          <div class="activity-name">Gallerie dell'Accademia</div>
+          <div class="activity-detail">~2 hours | Venice's Renaissance art collection</div>
+          
+          <div class="dossier-box dossier-see">
+            <span class="dossier-label">What you'll see:</span>
+            24 rooms of chronologically-arranged Venetian art from 14th-18th centuries. Titian, Bellini, Veronese, Tintoretto. The Leonardo Vitruvian Man. Masterpieces.
+          </div>
+
+          <div class="dossier-box dossier-why">
+            <span class="dossier-label">Why it matters:</span>
+            The definitive museum of Venetian art. You can watch the evolution of Venetian painting across 400 years, room by room.
+          </div>
+
+          <div class="dossier-box dossier-phys">
+            <span class="dossier-label">Physical & practical:</span>
+            Multiple staircases, 24 rooms. Can feel overwhelming—lots of art. Busiest museum of your trip. 2 hours realistic. Pick 5-6 paintings and ignore the rest. Buy tickets online.
+          </div>
+
+          <div class="vaporetto-box">
+            <strong>VAPORETTO: Line 1 westbound from Arsenale</strong>
+            Get off at Accademia (6-8 stops, about 20 min). You'll see the Accademia Bridge (wooden bridge). Museum entrance right there on waterfront.
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Lunch options</div>
+          <div class="restaurants-grid">
+            <div class="restaurant">
+              <div class="restaurant-name">Osteria Al Vecio Forno</div>
+              <div class="restaurant-note">Dorsoduro. Authentic Venetian, fresh seafood pasta. Cosy. EUR 30-40.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Ristorante La Calcina</div>
+              <div class="restaurant-note">Canal-side, locals eat here. Good pasta + seafood. EUR 28-38.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">La Zucca</div>
+              <div class="restaurant-note">Canal-side romantic. Unique menu (vegetarian-forward + seafood). EUR 30-42.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Dinner (Castello - close to Airbnb)</div>
+          <div class="restaurants-grid">
+            <div class="restaurant">
+              <div class="restaurant-name">VeRo <span class="book-badge">BOOK</span></div>
+              <div class="restaurant-note">Contemporary Venetian. Chef Amarante's creative execution. Wine pairings. EUR 50-70.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Da Fabiana Paolo</div>
+              <div class="restaurant-note">Short walk from Airbnb. Fantastic service, delicious. Walk-in OK. EUR 35-50.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Ristorante Cuore Veneziano</div>
+              <div class="restaurant-note">Authentic, kind to special occasions, positive vibes. Call ahead. EUR 40-55.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- JUNE 24 - ANNIVERSARY -->
+  <div class="day-card">
+    <details>
+      <summary class="day-summary">
+        <div class="day-info">
+          <span class="day-date">June 24</span>
+          <span class="day-dow">Wed</span>
+        </div>
+      </summary>
+      <div class="day-content">
+        <div class="coffee-spot"><strong>BREAKFAST:</strong> Anniversary morning—order ahead or pick up your favorites. Coffee in bed, pastry, and time to breathe. No museums today, just you two.</div>
+        
+        <div class="section">
+          <div class="section-title">Choose Your Own Adventure</div>
+          <div class="activity-name">A Day of Rest, Art, & Romance</div>
+          <div class="activity-detail">Rest day—no major museum. Walk, wander, explore, aperitivo. You set the pace.</div>
+          
+          <div class="adventure-option">
+            <span class="adventure-label">OPTION A: Art + Nature + Food</span>
+            Morning rest at Airbnb. Walk/push to Giardini (Venice Biennale 2026, "In Minor Keys"—11am-7pm, EUR 30 per person). Explore pavilions and sculpture gardens for 1-2 hours (meditation on art, "minor keys"). Walk through Sant'Elena neighborhood (quiet, local, beautiful). Aperitivo at a canal-side bar in Sant'Elena or back toward Arsenale. Rest at Airbnb before dinner.
+          </div>
+
+          <div class="adventure-option">
+            <span class="adventure-label">OPTION B: Just Neighborhoods + Vibes</span>
+            Walk/push through quiet Castello and Sant'Elena back streets. Find a local cafe, sit and people-watch. Wander the Rialto Market (afternoon, fewer tourists than morning). Aperitivo somewhere romantic and quiet. Return to Airbnb to rest before dinner.
+          </div>
+
+          <div class="adventure-option">
+            <span class="adventure-label">OPTION C: Mix of Both</span>
+            Walk to Biennale Giardini (check it out lightly, 45 min-1 hour, see what moves you). Then neighborhood exploration, quiet streets, aperitivo. Flexible, low-pressure, entirely your call. Rest before dinner.
+          </div>
+
+          <div class="dossier-box dossier-phys">
+            <span class="dossier-label">Biennale Giardini Info:</span>
+            Location: Sant'Elena, east Venice. 10-15 min walk from Airbnb or vaporetto Line 1/4.1 to Giardini stop. Hours (June 24, Tuesday): 11 am - 7 pm. Admission: EUR 30 per person (buy online in advance at labiennale.org). Wheelchair accessible. Curated theme "In Minor Keys"—visual, meditative procession. 100 national pavilions in historic gardens.
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Dinner (Fancy, Romantic - TBD)</div>
+          <div class="restaurants-grid">
+            <div class="restaurant">
+              <div class="restaurant-name">L'Alcova at Ca' Sagredo Hotel <span class="book-badge">TBD</span></div>
+              <div class="restaurant-note">Grand Canal terrace, 9 tables, daily-changing traditional Venetian menu from Rialto Market. Chef chats with diners. Hours 7-10 pm. Phone: +39 041 2413111. Email: info@casagredohotel.com. EXPLORING ACCESSIBILITY—will confirm terrace/wheelchair details before booking.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Al Covo</div>
+              <div class="restaurant-note">Candlelit, intimate, locally sourced, away from crowds. Feels like a local secret. EUR 50-65.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">CoVino</div>
+              <div class="restaurant-note">7 tables near Arsenale. Open kitchen, local seasonal. Informal + intimate. EUR 40-55.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Hostaria Castello</div>
+              <div class="restaurant-note">Between San Marco & Arsenal. Tiny, vintage vibe. Unique creative dishes. EUR 40-55.</div>
+            </div>
+            <div class="restaurant">
+              <div class="restaurant-name">Trattoria da Jonny</div>
+              <div class="restaurant-note">Near Arsenal. Black ravioli with cod (signature). Indoor + outdoor. EUR 45-60.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- JUNE 25 - DEPARTURE -->
+  <div class="day-card">
+    <details>
+      <summary class="day-summary">
+        <div class="day-info">
+          <span class="day-date">June 25</span>
+          <span class="day-dow">Thu</span>
+        </div>
+      </summary>
+      <div class="day-content">
+        <div class="coffee-spot"><strong>BREAKFAST:</strong> Quick bite before checkout—pastry and caffeine for travel. No time for wandering this morning.</div>
+        
+        <div class="section">
+          <div class="section-title">Final Day: Checkout & Travel</div>
+          <div class="activity-name">Venice to Quarto d'Altino</div>
+          <div class="activity-detail">Check out by 10:00 am. Train to mainland. One more night before home.</div>
+          
+          <div class="dossier-box dossier-phys">
+            <span class="dossier-label">Logistics:</span>
+            Airbnb checkout: 10:00 am (Ca' D'Oro). Luggage can be stored at Airbnb if you want to walk/rest before train. Train: Trenitalia 2nd Class Reserved. Venezia Santa Lucia → Quarto d'Altino. Departs 12:39 pm, arrives 1:01 pm. Ticket codes: 2845685901 / 2845685902. Transfer to Crowne Plaza Venice East (Expedia: 72074833626301, IHG: 25792308). Hotel has shuttle service to Marco Polo Airport next morning.
+          </div>
+
+          <div class="dossier-box dossier-why">
+            <span class="dossier-label">Tonight:</span>
+            One final night in the Veneto region before heading home. Relax at the Crowne Plaza (easier, less charming, but comfortable). Final dinner at hotel or nearby. Pack for early departure next day.
+          </div>
+
+          <div class="vaporetto-box">
+            <strong>VAPORETTO TO TRAIN STATION:</strong>
+            Line 1 or 4.1 from Arsenale → Ferrovia (Venezia Santa Lucia railway station). About 20 min. Buy your ACTV pass if you haven't used it up yet, or purchase individual ticket at dock.
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Return Flight (June 26)</div>
+          <div class="activity-name">Crowne Plaza Shuttle to Airport</div>
+          <div class="activity-detail">Hotel shuttle service to Marco Polo. Depart ~7:00-7:30 am for 9:25 am flight.</div>
+          
+          <div class="dossier-box dossier-phys">
+            <span class="dossier-label">Final Journey:</span>
+            DL8567 Venice → Amsterdam, departs 9:25 am. DL8719 Amsterdam → Detroit, departs 3:40 pm, arrives 6:25 pm (same day, due to time zones). Confirm shuttle time with hotel upon arrival.
+          </div>
+        </div>
+      </div>
+    </details>
+  </div>
+
+</div>
+
+<div class="footer-notes">
+  <strong>TRIP ESSENTIALS:</strong>
+  
+  <strong>Transportation:</strong> 7-day ACTV vaporetto pass (buy at Arsenale on arrival, ~EUR 60 per person). Line 1 is your lifeline—westbound along the Grand Canal, eastbound back. Vaporettos run every 7-10 min.
+  
+  <strong>Museum Tickets (buy online):</strong> Doge's Palace, St. Mark's Basilica, Accademia, Guggenheim, San Rocco. Biennale Giardini if doing Option A on June 24 (EUR 30 per person, labiennale.org).
+  
+  <strong>Breakfast Supplies & Delivery:</strong> Ask your Airbnb host (Alessandro & Eleonora) for nearest panetteria (bakery) and alimentari (deli). You can also order bread, eggs, milk, coffee via Deliveroo, Just Eat, or Glovo for next-morning delivery. Plan ahead if you want supplies waiting when you arrive.
+  
+  <strong>Restaurant Bookings (BOOK NOW):</strong> Osteria Alla Staffa, Al Covo, Osteria Boccadoro, Hostaria Castello, Trattoria da Jonny, Trattoria ai Tosi, CoVino, VeRo. Call or email directly, or use TheFork (La Forchetta) app. Some smaller spots don't take reservations—plan walk-in backup.
+  
+  <strong>Accessibility Notes:</strong> Sarah's wheelchair is welcome throughout Venice. Narrow alleys in some areas (Ghetto, Cannaregio), but generally manageable. Vaporetto access marked at each stop. Luggage: Airbnb can store during day.
+  
+  <strong>Final Tip:</strong> Venice is best at dawn (before crowds) and dusk (golden light, locals out). You've got five full days—go slow, get lost, sit by a canal with coffee or wine. That's where the real magic is. Buona fortuna, you two.
+</div>
+
+</body>
+</html>
